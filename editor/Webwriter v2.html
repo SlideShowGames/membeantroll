@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Editor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        #editor-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        #editor {
+            flex: 1;
+            min-width: 50%;
+            height: 400px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-family: monospace;
+            background-color: #fff;
+        }
+
+        #preview {
+            flex: 1;
+            min-width: 50%;
+            height: 400px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #fff;
+        }
+
+        button {
+            display: block;
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>HTML Editor</h1>
+    </header>
+    <div id="editor-container">
+        <textarea id="editor" placeholder="Write your HTML code here..."></textarea>
+        <div id="preview"></div>
+    </div>
+    <button id="export-button">Export HTML</button>
+    <input type="file" id="import-file" style="display: none;">
+    <label for="import-file">Import HTML</label>
+
+    <script>
+        const editor = document.getElementById('editor');
+        const preview = document.getElementById('preview');
+        const exportButton = document.getElementById('export-button');
+        const importFileInput = document.getElementById('import-file');
+
+        // Update the preview when the editor content changes
+        editor.addEventListener('input', () => {
+            preview.innerHTML = editor.value;
+        });
+
+        // Initialize the preview with the initial content
+        preview.innerHTML = editor.value;
+
+        // Export HTML
+        exportButton.addEventListener('click', () => {
+            const htmlContent = editor.value;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'exported.html';
+            a.click();
+        });
+
+        // Import HTML
+        importFileInput.addEventListener('change', () => {
+            const file = importFileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    editor.value = e.target.result;
+                    preview.innerHTML = e.target.result;
+                };
+                reader.readAsText(file);
+            }
+        });
+    </script>
+</body>
+</html>
